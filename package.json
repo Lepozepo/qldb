@@ -11,7 +11,8 @@
     "pack:build": "pack build",
     "pack:publish": "pack publish",
     "test:lint": "eslint ./src --quiet -c ./.eslintrc.js",
-    "test:unit": "jest --ci"
+    "test:unit": "jest --ci",
+    "version": "npm run pack:build"
   },
   "@pika/pack": {
     "pipeline": [
