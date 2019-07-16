@@ -7,17 +7,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="4543492d-8674-4320-a141-a7d2cb035614" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/../assets/execute.jar" beforeDir="false" afterPath="$PROJECT_DIR$/../assets/execute.jar" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/4.10/fileHashes/fileHashes.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/4.10/fileHashes/fileHashes.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/4.10/fileHashes/fileHashes.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/4.10/fileHashes/fileHashes.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/4.10/taskHistory/taskHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/4.10/taskHistory/taskHistory.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/4.10/taskHistory/taskHistory.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/4.10/taskHistory/taskHistory.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/outputFiles.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/outputFiles.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/classes/artifacts/qldb_sample_app_2_jar/qldb-sample-app-2.jar" beforeDir="false" afterPath="$PROJECT_DIR$/classes/artifacts/qldb_sample_app_2_jar/qldb-sample-app-2.jar" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/classes/software/amazon/qldb/tutorial/Execute.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/classes/software/amazon/qldb/tutorial/Execute.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/software/amazon/qldb/tutorial/Execute.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/software/amazon/qldb/tutorial/Execute.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/index.test.js" beforeDir="false" afterPath="$PROJECT_DIR$/../src/index.test.js" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/classes/" />
     <ignored path="$PROJECT_DIR$/.gradle/" />
@@ -188,12 +178,12 @@
       <workItem from="1562877606377" duration="1990000" />
       <workItem from="1563204309421" duration="315000" />
       <workItem from="1563207693966" duration="394000" />
-      <workItem from="1563295292348" duration="1915000" />
+      <workItem from="1563295292348" duration="2104000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="4973000" />
+    <option name="totallyTimeSpent" value="5162000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="7" y="12" width="1666" height="1000" extended-state="0" />

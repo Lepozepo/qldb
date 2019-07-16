@@ -33,7 +33,7 @@ export default class QLDB {
 
         return resolve(result);
       } catch (err) {
-        return reject(err);
+        return reject(new Error((err.cause && err.cause.getMessageSync()) || err));
       }
     });
   }
