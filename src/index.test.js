@@ -12,4 +12,15 @@ describe('QLDB', () => {
     const result = await QuantumClient.execute(process.env.TEST_QUERY);
     expect(result).toBeInstanceOf(Array);
   });
+
+  it('can fail', async () => {
+    let failure;
+    try {
+      await QuantumClient.execute('SELECT * FROM nothing');
+    } catch (err) {
+      failure = err;
+    }
+    expect(failure).toBeInstanceOf(Error);
+    expect(failure.message.includes('No such variable')).toBe(true);
+  });
 });
