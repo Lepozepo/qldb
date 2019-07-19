@@ -1,4 +1,4 @@
-import ionize from './ionize';
+import { ionize } from './index';
 
 describe('ionize', () => {
   it('can convert objects to ion structs', () => {

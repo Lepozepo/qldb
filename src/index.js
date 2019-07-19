@@ -1,2 +1,67 @@
-export { default as ionize } from './ionize';
-export { default as QLDB } from './QLDB';
+import { isDate, isPlainObject, isArray } from 'lodash';
+import java from 'java';
+import parse from 'loose-json';
+import path from 'path';
+
+java.classpath.push(path.resolve(__dirname, '../assets/execute.jar'));
+const Execute = java.import('software.amazon.qldb.tutorial.Execute');
+
+function ionize(entity) {
+  let string = '';
+  if (isPlainObject(entity)) {
+    Object.entries(entity).forEach(([key, value]) => {
+      if (isDate(value)) {
+        string += `'${key}':\`${value.toISOString()}\`,`;
+      } else if (isPlainObject(value)) {
+        string += `'${key}':${ionize(value)},`;
+      } else if (isArray(value)) {
+        string += `'${key}':[${value.map(v => ionize(v)).join(',')}],`;
+      } else {
+        string += `'${key}':${JSON.stringify(value).replace(/"/ig, "'")},`;
+      }
+    });
+    string = `{${string.slice(0, -1)}}`;
+  } else if (isArray(entity)) {
+    string = `<<${entity.map(e => ionize(e)).join(',')}>>`;
+  } else {
+    string = JSON.stringify(entity).replace(/"/ig, "'");
+  }
+  return string;
+}
+
+class QLDB {
+  constructor(props = {}) {
+    this.props = {
+      region: 'us-east-2',
+      ...props,
+    };
+  }
+
+  execute(query) {
+    return new Promise((resolve, reject) => {
+      try {
+        const {
+          accessKey,
+          secretKey,
+          region,
+          ledger,
+        } = this.props;
+        if (!accessKey) throw new Error('accessKey required!');
+        if (!secretKey) throw new Error('secretKey required!');
+        if (!ledger) throw new Error('ledger required!');
+
+        const resultBuffer = Execute.executeSync(accessKey, secretKey, region, ledger, query);
+        if (!resultBuffer) return resolve();
+        const resultString = resultBuffer.toStringSync();
+        const result = parse(resultString);
+
+        return resolve(result);
+      } catch (err) {
+        return reject(new Error((err.cause && err.cause.getMessageSync()) || err));
+      }
+    });
+  }
+}
+
+export { ionize };
+export default QLDB;
