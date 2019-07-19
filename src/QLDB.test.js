@@ -1,4 +1,4 @@
-import QLDB from './index';
+import QLDB from './QLDB';
 
 const QuantumClient = new QLDB({
   region: process.env.REGION,
