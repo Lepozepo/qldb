@@ -18,3 +18,26 @@ const QuantumClient = new QLDB({
 // Later in your code
 const stuff = await QuantumClient.execute('SELECT * from Stuff');
 ```
+
+### Inserting documents
+To insert a document you need to convert it to ion structures as describe [here](http://amzn.github.io/ion-docs/docs/spec.html). This package provides a helper to convert javascript objects and array into ion structures.
+
+- Import ionize from qldb
+- Pass an array or object through the function
+- Run an insert or update statement
+
+```
+import QLDB, { ionize } from 'qldb';
+
+const QuantumClient = new QLDB({
+  accessKey,
+  secretKey,
+  region,
+  ledger,
+});
+
+// Later in your code
+const doc = { id: 'someId', key: 'value', n: 1, fl: 1.2, obj: { s: 's' }, arr: [1, 2] };
+const stuff = await QuantumClient.execute(`INSERT INTO collection ${ionize(doc)}`);
+```
+
