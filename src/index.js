@@ -1,4 +1,4 @@
-import { isDate, isPlainObject, isArray } from 'lodash';
+import { isDate, isPlainObject, isArray, pick } from 'lodash';
 import java from 'java';
 import parse from 'loose-json';
 import path from 'path';
@@ -135,6 +135,89 @@ class QLDB {
         method,
         ...(dataEmpty ? {} : { body: JSON.stringify(data) }),
       }, { accessKeyId, secretAccessKey }).headers,
+    });
+  }
+
+  create(props) {
+    return this.control('create', {
+      data: pick(props, [
+        'DeletionProtection',
+        'Name',
+        'PermissionsMode',
+        'Tags',
+      ]),
+    });
+  }
+
+  delete(props) {
+    return this.control('delete', {
+      path: pick(props, [
+        'Name',
+      ]),
+    });
+  }
+
+  list(props) {
+    return this.control('list', {
+      params: pick(props, [
+        'MaxResults',
+        'NextToken',
+      ]),
+    });
+  }
+
+  describe(props) {
+    return this.control('describe', {
+      path: pick(props, [
+        'Name',
+      ]),
+    });
+  }
+
+  update(props) {
+    return this.control('update', {
+      data: pick(props, [
+        'DeletionProtection',
+      ]),
+      path: pick(props, [
+        'Name',
+      ]),
+    });
+  }
+
+  block(props) {
+    return this.control('getBlock', {
+      data: pick(props, [
+        'BlockAddress',
+        'DigestTipAddress',
+      ]),
+      path: pick(props, [
+        'Name',
+      ]),
+    });
+  }
+
+  digest(props) {
+    return this.control('getDigest', {
+      data: pick(props, [
+        'DigestTipAddress',
+      ]),
+      path: pick(props, [
+        'Name',
+      ]),
+    });
+  }
+
+  revision(props) {
+    return this.control('getRevision', {
+      data: pick(props, [
+        'BlockAddress',
+        'DigestTipAddress',
+        'DocumentId',
+      ]),
+      path: pick(props, [
+        'Name',
+      ]),
     });
   }
 
