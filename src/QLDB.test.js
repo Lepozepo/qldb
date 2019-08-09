@@ -23,4 +23,9 @@ describe('QLDB', () => {
     expect(failure).toBeInstanceOf(Error);
     expect(failure.message.includes('No such variable')).toBe(true);
   });
+
+  it('can list ledgers', async () => {
+    const result = await QuantumClient.control('listLedgers');
+    expect(result.data.Ledgers).toBeInstanceOf(Array);
+  });
 });

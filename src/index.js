@@ -2,6 +2,8 @@ import { isDate, isPlainObject, isArray } from 'lodash';
 import java from 'java';
 import parse from 'loose-json';
 import path from 'path';
+import axios from 'axios';
+import aws4 from 'aws4';
 
 java.classpath.push(path.resolve(__dirname, '../assets/execute.jar'));
 const Execute = java.import('software.amazon.qldb.tutorial.Execute');
@@ -35,7 +37,43 @@ class QLDB {
       region: 'us-east-2',
       ...props,
     };
+
+    this.controlUrl = `https://qldb.${this.props.region}.amazonaws.com`;
   }
+
+  endpoints = {
+    listLedgers: {
+      method: 'GET',
+      path: () => '/ledgers',
+    },
+  };
+
+  control(action, props) {
+    const {
+      accessKey: accessKeyId,
+      secretKey: secretAccessKey,
+    } = this.props;
+
+    if (!accessKeyId) throw new Error('accessKey required!');
+    if (!secretAccessKey) throw new Error('secretKey required!');
+
+    const controlEndpointPath = this.endpoints[action].path(props);
+    const { method } = this.endpoints[action];
+
+    return axios({
+      method,
+      url: `${this.controlUrl}${controlEndpointPath}`,
+      data: props,
+      params: props,
+      headers: aws4.sign({
+        service: 'qldb',
+        region: this.props.region,
+        path: controlEndpointPath,
+        method,
+      }, { accessKeyId, secretAccessKey }).headers,
+    });
+  }
+
 
   execute(query) {
     return new Promise((resolve, reject) => {
