@@ -58,6 +58,44 @@ class QLDB {
       method: 'GET',
       path: () => '/ledgers',
     },
+    describe: {
+      method: 'GET',
+      path: ({ Name }) => `/ledgers/${Name}`,
+    },
+    update: {
+      method: 'POST',
+      path: ({ Name }) => `/ledgers/${Name}`,
+    },
+    // JOURNALS
+    describeS3Journal: {
+      method: 'GET',
+      path: ({ Name, ExportId }) => `/ledgers/${Name}/journal-s3-exports/${ExportId}`,
+    },
+    exportS3Journal: {
+      method: 'POST',
+      path: ({ Name }) => `/ledgers/${Name}/journal-s3-exports`,
+    },
+    listS3Journals: {
+      method: 'GET',
+      path: () => '/journal-s3-exports',
+    },
+    listLedgersS3Journals: {
+      method: 'GET',
+      path: ({ Name }) => `/ledgers/${Name}/journal-s3-exports`,
+    },
+    // BLOCKCHAIN
+    getBlock: {
+      method: 'GET',
+      path: ({ Name }) => `/ledgers/${Name}/block`,
+    },
+    getDigest: {
+      method: 'POST',
+      path: ({ Name }) => `/ledgers/${Name}/digest`,
+    },
+    getRevision: {
+      method: 'POST',
+      path: ({ Name }) => `/ledgers/${Name}/revision`,
+    },
   };
 
   control(action, props = {}) {
