@@ -4,6 +4,7 @@ import parse from 'loose-json';
 import path from 'path';
 import axios from 'axios';
 import aws4 from 'aws4';
+import qs from 'qs';
 
 java.classpath.push(path.resolve(__dirname, '../assets/execute.jar'));
 const Execute = java.import('software.amazon.qldb.tutorial.Execute');
@@ -42,13 +43,24 @@ class QLDB {
   }
 
   endpoints = {
-    listLedgers: {
+    create: {
+      method: 'POST',
+      path: () => '/ledgers',
+      defaultData: {
+        PermissionsMode: 'ALLOW_ALL',
+      },
+    },
+    delete: {
+      method: 'DELETE',
+      path: ({ Name }) => `/ledgers/${Name}`,
+    },
+    list: {
       method: 'GET',
       path: () => '/ledgers',
     },
   };
 
-  control(action, props) {
+  control(action, props = {}) {
     const {
       accessKey: accessKeyId,
       secretKey: secretAccessKey,
@@ -57,19 +69,33 @@ class QLDB {
     if (!accessKeyId) throw new Error('accessKey required!');
     if (!secretAccessKey) throw new Error('secretKey required!');
 
-    const controlEndpointPath = this.endpoints[action].path(props);
-    const { method } = this.endpoints[action];
+    const endpoint = this.endpoints[action];
+    const controlEndpointPath = endpoint.path(props.path);
+    const { method } = endpoint;
+
+    const data = {
+      ...(endpoint.defaultData || {}),
+      ...props.data,
+    };
+    const dataEmpty = Object.entries(data).length === 0;
+
+    const params = {
+      ...(endpoint.defaultParams || {}),
+      ...props.params,
+    };
+    const paramsEmpty = Object.entries(params).length === 0;
 
     return axios({
       method,
       url: `${this.controlUrl}${controlEndpointPath}`,
-      data: props,
-      params: props,
+      ...(dataEmpty ? {} : { data }),
+      ...(paramsEmpty ? {} : { params }),
       headers: aws4.sign({
         service: 'qldb',
         region: this.props.region,
-        path: controlEndpointPath,
+        path: `${controlEndpointPath}${paramsEmpty ? '' : qs.stringify(params, { addQueryPrefix: true })}`,
         method,
+        ...(dataEmpty ? {} : { body: JSON.stringify(data) }),
       }, { accessKeyId, secretAccessKey }).headers,
     });
   }

@@ -25,7 +25,31 @@ describe('QLDB', () => {
   });
 
   it('can list ledgers', async () => {
-    const result = await QuantumClient.control('listLedgers');
-    expect(result.data.Ledgers).toBeInstanceOf(Array);
+    try {
+      const result = await QuantumClient.control('list');
+      expect(result.data.Ledgers).toBeInstanceOf(Array);
+    } catch (err) {
+      // console.log(err);
+      throw err;
+    }
+  });
+
+  it('can create/delete ledgers', async () => {
+    try {
+      const createResult = await QuantumClient.control('create', {
+        data: {
+          Name: 'tester',
+        },
+      });
+      expect(createResult.data.Name).toBe('tester');
+
+      await QuantumClient.control('delete', {
+        path: {
+          Name: 'tester',
+        },
+      });
+    } catch (err) {
+      throw err;
+    }
   });
 });
