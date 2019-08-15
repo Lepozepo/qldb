@@ -15,6 +15,8 @@ package software.amazon.qldb.tutorial;
 import com.amazon.qldb.QldbSession;
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
+import com.amazonaws.services.qldb.AmazonQLDB;
+import com.amazonaws.services.qldb.AmazonQLDBClientBuilder;
 import com.amazonaws.services.qldbsessionv1.AmazonQLDBSessionV1ClientBuilder;
 
 /**
@@ -31,6 +33,15 @@ public class ConnectToLedger {
                 .withLedger(ledgerName)
                 .withOccConflictRetryLimit(4)
                 .withSessionClientBuilder(builder)
+                .build();
+    }
+
+    public static AmazonQLDB connectQldbClient(String accessKey, String secretKey, String region) {
+        BasicAWSCredentials awsCreds = new BasicAWSCredentials(accessKey, secretKey);
+        return AmazonQLDBClientBuilder
+                .standard()
+                .withCredentials(new AWSStaticCredentialsProvider(awsCreds))
+                .withRegion(region)
                 .build();
     }
 
