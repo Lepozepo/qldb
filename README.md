@@ -41,3 +41,11 @@ const doc = { id: 'someId', key: 'value', n: 1, fl: 1.2, obj: { s: 's' }, arr: [
 const stuff = await QuantumClient.execute(`INSERT INTO collection ${ionize(doc)}`);
 ```
 
+## Validating documents
+To validate documents as described [here](https://s3.amazonaws.com/amazon-qldb-docs/verification.digest.html) you can use the Quantum Client's `validate` function. The validate function can only take a query string that returns QLDB history.
+
+```
+import QuantumClient from './your/configured/QLDB/instance';
+
+const isValid = await QuantumClient.validate(`SELECT * FROM _ql_committed_Vehicle WHERE data.VIN = '1HVBBAANXWH544237'`);
+```
