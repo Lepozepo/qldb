@@ -1,6 +1,6 @@
 {
   "name": "qldb",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "license": "MIT",
   "dependencies": {
     "aws4": "^1.8.0",
