@@ -34,12 +34,10 @@ describe('QLDB', () => {
     }
   });
 
-  it('can create ledgers', async () => {
+  it('can validate ledger entries', async () => {
     try {
-      const createResult = await QuantumClient.create({
-        Name: 'tester',
-      });
-      expect(createResult.data.Name).toBe('tester');
+      const validationResult = await QuantumClient.validate(process.env.TEST_VALIDATION_QUERY);
+      expect(validationResult).toBe(true);
     } catch (err) {
       throw err;
     }
