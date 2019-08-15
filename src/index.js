@@ -8,6 +8,7 @@ import qs from 'qs';
 
 java.classpath.push(path.resolve(__dirname, '../assets/execute.jar'));
 const Execute = java.import('software.amazon.qldb.tutorial.Execute');
+const Validate = java.import('software.amazon.qldb.tutorial.Validate');
 
 function ionize(entity) {
   let string = '';
@@ -221,6 +222,26 @@ class QLDB {
     });
   }
 
+  validate(query) {
+    return new Promise((resolve, reject) => {
+      try {
+        const {
+          accessKey,
+          secretKey,
+          region,
+          ledger,
+        } = this.props;
+        if (!accessKey) throw new Error('accessKey required!');
+        if (!secretKey) throw new Error('secretKey required!');
+        if (!ledger) throw new Error('ledger required!');
+
+        const result = Validate.validateSync(accessKey, secretKey, region, ledger, query);
+        return resolve(result);
+      } catch (err) {
+        return reject(new Error((err.cause && err.cause.getMessageSync()) || err));
+      }
+    });
+  }
 
   execute(query) {
     return new Promise((resolve, reject) => {
