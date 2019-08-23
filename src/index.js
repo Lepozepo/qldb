@@ -1,4 +1,9 @@
-import { isDate, isPlainObject, isArray, pick } from 'lodash';
+import {
+  isDate,
+  isPlainObject,
+  isArray,
+  pick,
+} from 'lodash';
 import java from 'java';
 import parse from 'loose-json';
 import path from 'path';
