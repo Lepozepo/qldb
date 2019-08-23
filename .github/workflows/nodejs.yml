@@ -6,23 +6,24 @@ jobs:
   test:
     runs-on: ubuntu-latest
 
-    strategy:
-      matrix:
-        node-version: [8.x, 10.x]
+    # strategy:
+    #   matrix:
+    #     node-version: [8.x, 10.x]
 
     steps:
     - uses: actions/checkout@v1
+    - uses: docker://circleci/python:3.7.0-node-browsers
 
-    - name: Use Java
-      uses: actions/setup-java@v1
-      with:
-        java-version: '11.0.x'
-        architecture: x64
+    # - name: Use Java
+    #   uses: actions/setup-java@v1
+    #   with:
+    #     java-version: '11.0.x'
+    #     architecture: x64
 
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v1
-      with:
-        node-version: ${{ matrix.node-version }}
+    # - name: Use Node.js ${{ matrix.node-version }}
+    #   uses: actions/setup-node@v1
+    #   with:
+    #     node-version: ${{ matrix.node-version }}
 
     - name: install
       run: yarn

@@ -34,12 +34,12 @@ describe('QLDB', () => {
     }
   });
 
-  // it('can validate ledger entries', async () => {
-  //   try {
-  //     const validationResult = await QuantumClient.validate(process.env.TEST_VALIDATION_QUERY);
-  //     expect(validationResult).toBe(true);
-  //   } catch (err) {
-  //     throw err;
-  //   }
-  // });
+  it('can validate ledger entries', async () => {
+    try {
+      const validationResult = await QuantumClient.validate(process.env.TEST_VALIDATION_QUERY);
+      expect(validationResult).toBe(true);
+    } catch (err) {
+      throw err;
+    }
+  });
 });
