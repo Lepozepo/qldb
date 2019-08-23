@@ -28,6 +28,6 @@ jobs:
       run: yarn
 
     - name: test
-      run: yarn yest
+      run: yarn test
       env:
         CI: true
