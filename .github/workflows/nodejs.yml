@@ -12,18 +12,22 @@ jobs:
 
     steps:
     - uses: actions/checkout@v1
+
     - name: Use Java
       uses: actions/setup-java@v1
       with:
         java-version: '11.0.x'
         architecture: x64
+
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
-    - name: npm install and test
-      run: |
-        npm install
-        npm test
+
+    - name: install
+      run: yarn
+
+    - name: test
+      run: yarn yest
       env:
         CI: true
