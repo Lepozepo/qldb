@@ -17,6 +17,7 @@
   "scripts": {
     "pack:build": "pack build",
     "pack:publish": "pack publish",
+    "test": "npx npm-run-all --parallel test:*",
     "test:lint": "eslint ./src --quiet -c ./.eslintrc.js",
     "test:unit": "jest --ci",
     "version": "npm run pack:build"
