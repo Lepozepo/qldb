@@ -31,3 +31,10 @@ jobs:
       run: yarn test
       env:
         CI: true
+        ACCESS_KEY: ${{ secrets.ACCESS_KEY }}
+        SECRET_KEY: ${{ secrets.SECRET_KEY }}
+        LEDGER: ${{ secrets.LEDGER }}
+        REGION: ${{ secrets.REGION }}
+        TEST_QUERY: ${{ secrets.TEST_QUERY }}
+        TEST_VALIDATION_QUERY: ${{ secrets.TEST_VALIDATION_QUERY }}
+
