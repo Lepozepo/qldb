@@ -1,0 +1,36 @@
+name: Node CI
+
+on: [push]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v1
+
+    - name: Use Java
+      uses: actions/setup-java@v1
+      with:
+        java-version: '11.0.x'
+        architecture: x64
+
+    - name: Use Node 10
+      uses: actions/setup-node@v1
+      with:
+        node-version: '10.x'
+
+    - name: install
+      run: yarn
+
+    - name: test
+      run: yarn test:lint
+      env:
+        CI: true
+        ACCESS_KEY: ${{ secrets.ACCESS_KEY }}
+        SECRET_KEY: ${{ secrets.SECRET_KEY }}
+        LEDGER: ${{ secrets.LEDGER }}
+        REGION: ${{ secrets.REGION }}
+        TEST_QUERY: ${{ secrets.TEST_QUERY }}
+        TEST_VALIDATION_QUERY: ${{ secrets.TEST_VALIDATION_QUERY }}
+
