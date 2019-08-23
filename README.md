@@ -1,7 +1,15 @@
 # QLDB Java Bridge for Node
-This is a temporary solution to the missing QLDB driver for AWS. It uses the Java driver internally to run queries against QLDB.
+This is a **temporary** solution to the missing QLDB driver for AWS. It uses the Java driver internally to run queries against QLDB.
 
 ## How to use
+- This package **REQUIRES Java** in your environment. If you use Docker you can easily work it into your Dockerfile with an image that has it installed:
+```
+FROM circleci/python:3.7.0-node-browsers
+...your other commands
+EXPOSE 4000
+CMD ["node", "./index.js"]
+```
+
 - Import QLDB and instantiate a client
 - Run queries using `execute`
 
