@@ -1038,6 +1038,11 @@
   resolved "https://registry.yarnpkg.com/@types/node/-/node-12.6.8.tgz#e469b4bf9d1c9832aee4907ba8a051494357c12c"
   integrity sha512-aX+gFgA5GHcDi89KG5keey2zf0WfZk/HAQotEamsK2kbey+8yGKcson0hbK8E+v0NArlCJQCqMP161YhV6ZXLg==
 
+"@types/node@12.0.2":
+  version "12.0.2"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-12.0.2.tgz#3452a24edf9fea138b48fad4a0a028a683da1e40"
+  integrity sha512-5tabW/i+9mhrfEOUcLDu2xBPsHJ+X5Orqy9FKpale3SjDA17j5AEpYq5vfy3oAeAHGcvANRCO3NV3d2D6q3NiA==
+
 "@types/node@^10.12.18":
   version "10.14.13"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-10.14.13.tgz#ac786d623860adf39a3f51d629480aacd6a6eec7"
@@ -1105,6 +1110,16 @@ ajv@^6.10.2, ajv@^6.5.5, ajv@^6.9.1:
     fast-json-stable-stringify "^2.0.0"
     json-schema-traverse "^0.4.1"
     uri-js "^4.2.2"
+
+amazon-qldb-driver-nodejs@^0.1.0-preview.2:
+  version "0.1.0-preview.2"
+  resolved "https://registry.yarnpkg.com/amazon-qldb-driver-nodejs/-/amazon-qldb-driver-nodejs-0.1.0-preview.2.tgz#233ed7548535772ced87d0bc2122f1e15998c559"
+  integrity sha512-DSH8MpH2q081DyGaErBpHNKPEkF5WsLBuxtqLYpiXiNPdcJtid41YPs8DhPkf+mZU90uRHKeYvpCjnyTWoHw6A==
+  dependencies:
+    "@types/node" "12.0.2"
+    ion-hash-js "^1.0.2"
+    semaphore-async-await "^1.5.1"
+    stream "0.0.2"
 
 ansi-align@^2.0.0:
   version "2.0.0"
@@ -2128,6 +2143,11 @@ elegant-spinner@^1.0.1:
   resolved "https://registry.yarnpkg.com/elegant-spinner/-/elegant-spinner-1.0.1.tgz#db043521c95d7e303fd8f345bedc3349cfb0729e"
   integrity sha1-2wQ1IcldfjA/2PNFvtwzSc+wcp4=
 
+emitter-component@^1.1.1:
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/emitter-component/-/emitter-component-1.1.1.tgz#065e2dbed6959bf470679edabeaf7981d1003ab6"
+  integrity sha1-Bl4tvtaVm/RwZ57avq95gdEAOrY=
+
 emoji-regex@^7.0.1, emoji-regex@^7.0.2:
   version "7.0.3"
   resolved "https://registry.yarnpkg.com/emoji-regex/-/emoji-regex-7.0.3.tgz#933a04052860c85e83c122479c4748a8e4c72156"
@@ -3128,6 +3148,20 @@ invert-kv@^2.0.0:
   resolved "https://registry.yarnpkg.com/invert-kv/-/invert-kv-2.0.0.tgz#7393f5afa59ec9ff5f67a27620d11c226e3eec02"
   integrity sha512-wPVv/y/QQ/Uiirj/vh3oP+1Ww+AWehmi1g5fFWGPF6IpCBCDVrhgHRMvrLfdYcwDh3QJbGXDW4JAuzxElLSqKA==
 
+ion-hash-js@^1.0.2:
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/ion-hash-js/-/ion-hash-js-1.0.3.tgz#5472aaf84f1f7b5a30e8ea885794df861cf4293e"
+  integrity sha512-c1U7DW9icOrof1cfzktq/8zaPXLneDJqZhYydhTmNBbHJ+D6JHTFydp5fu+PlwirgEt6qB+wPUcaVdJPQgqKug==
+  dependencies:
+    ion-js "^3.1.2"
+
+ion-js@^3.1.2:
+  version "3.1.2"
+  resolved "https://registry.yarnpkg.com/ion-js/-/ion-js-3.1.2.tgz#17aa2b949dcc5e197091e54293c182d304ff25cd"
+  integrity sha512-pujfIqzKMEfxBBD98vcJQcPVlckM0f3ETd+x6+SPYq50xD4li2sCZ9ODCPAGlT8stRqHa8aGuJ1puwrAoyTcxw==
+  dependencies:
+    jsbi "^3.1.1"
+
 ip-regex@^4.1.0:
   version "4.1.0"
   resolved "https://registry.yarnpkg.com/ip-regex/-/ip-regex-4.1.0.tgz#5ad62f685a14edb421abebc2fff8db94df67b455"
@@ -3859,6 +3893,11 @@ js-yaml@^3.13.0, js-yaml@^3.13.1:
   dependencies:
     argparse "^1.0.7"
     esprima "^4.0.0"
+
+jsbi@^3.1.1:
+  version "3.1.1"
+  resolved "https://registry.yarnpkg.com/jsbi/-/jsbi-3.1.1.tgz#8ea18b3e08d102c6cc09acaa9a099921d775f4fa"
+  integrity sha512-+HQESPaV0mRiH614z4JPVPAftcRC2p53x92lySPzUzFwJbJTMpzHz8OYUkcXPN3fOcHUe0NdVcHnCtX/1+eCrA==
 
 jsbn@~0.1.0:
   version "0.1.1"
@@ -5656,6 +5695,11 @@ scoped-regex@^2.0.0:
   resolved "https://registry.yarnpkg.com/scoped-regex/-/scoped-regex-2.1.0.tgz#7b9be845d81fd9d21d1ec97c61a0b7cf86d2015f"
   integrity sha512-g3WxHrqSWCZHGHlSrF51VXFdjImhwvH8ZO/pryFH56Qi0cDsZfylQa/t0jCzVQFNbNvM00HfHjkDPEuarKDSWQ==
 
+semaphore-async-await@^1.5.1:
+  version "1.5.1"
+  resolved "https://registry.yarnpkg.com/semaphore-async-await/-/semaphore-async-await-1.5.1.tgz#857bef5e3644601ca4b9570b87e9df5ca12974fa"
+  integrity sha1-hXvvXjZEYBykuVcLh+nfXKEpdPo=
+
 semver-diff@^2.0.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/semver-diff/-/semver-diff-2.1.0.tgz#4bbb8437c8d37e4b0cf1a68fd726ec6d645d6d36"
@@ -5905,6 +5949,13 @@ stealthy-require@^1.1.1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/stealthy-require/-/stealthy-require-1.1.1.tgz#35b09875b4ff49f26a777e509b3090a3226bf24b"
   integrity sha1-NbCYdbT/SfJqd35QmzCQoyJr8ks=
+
+stream@0.0.2:
+  version "0.0.2"
+  resolved "https://registry.yarnpkg.com/stream/-/stream-0.0.2.tgz#7f5363f057f6592c5595f00bc80a27f5cec1f0ef"
+  integrity sha1-f1Nj8Ff2WSxVlfALyAon9c7B8O8=
+  dependencies:
+    emitter-component "^1.1.1"
 
 string-length@^2.0.0:
   version "2.0.0"
