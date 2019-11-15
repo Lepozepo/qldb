@@ -10,12 +10,13 @@ import path from 'path';
 import axios from 'axios';
 import aws4 from 'aws4';
 import qs from 'qs';
+import { QLDB as ControlDriver, QLDBSession as SessionDriver } from 'aws-sdk';
 
 java.classpath.push(path.resolve(__dirname, '../assets/execute.jar'));
 const Execute = java.import('software.amazon.qldb.tutorial.Execute');
 const Validate = java.import('software.amazon.qldb.tutorial.Validate');
 
-function ionize(entity) {
+export function ionize(entity) {
   let string = '';
   if (isPlainObject(entity)) {
     Object.entries(entity).forEach(([key, value]) => {
@@ -38,194 +39,90 @@ function ionize(entity) {
   return string;
 }
 
-class QLDB {
+export default class QLDB {
   constructor(props = {}) {
     this.props = {
       region: 'us-east-2',
       ...props,
     };
 
-    this.controlUrl = `https://qldb.${this.props.region}.amazonaws.com`;
-  }
-
-  endpoints = {
-    create: {
-      method: 'POST',
-      path: () => '/ledgers',
-      defaultData: {
-        PermissionsMode: 'ALLOW_ALL',
-      },
-    },
-    delete: {
-      method: 'DELETE',
-      path: ({ Name }) => `/ledgers/${Name}`,
-    },
-    list: {
-      method: 'GET',
-      path: () => '/ledgers',
-    },
-    describe: {
-      method: 'GET',
-      path: ({ Name }) => `/ledgers/${Name}`,
-    },
-    update: {
-      method: 'POST',
-      path: ({ Name }) => `/ledgers/${Name}`,
-    },
-    // JOURNALS
-    describeS3Journal: {
-      method: 'GET',
-      path: ({ Name, ExportId }) => `/ledgers/${Name}/journal-s3-exports/${ExportId}`,
-    },
-    exportS3Journal: {
-      method: 'POST',
-      path: ({ Name }) => `/ledgers/${Name}/journal-s3-exports`,
-    },
-    listS3Journals: {
-      method: 'GET',
-      path: () => '/journal-s3-exports',
-    },
-    listLedgersS3Journals: {
-      method: 'GET',
-      path: ({ Name }) => `/ledgers/${Name}/journal-s3-exports`,
-    },
-    // BLOCKCHAIN
-    getBlock: {
-      method: 'GET',
-      path: ({ Name }) => `/ledgers/${Name}/block`,
-    },
-    getDigest: {
-      method: 'POST',
-      path: ({ Name }) => `/ledgers/${Name}/digest`,
-    },
-    getRevision: {
-      method: 'POST',
-      path: ({ Name }) => `/ledgers/${Name}/revision`,
-    },
-  };
-
-  control(action, props = {}) {
-    const {
-      accessKey: accessKeyId,
-      secretKey: secretAccessKey,
-    } = this.props;
-
-    if (!accessKeyId) throw new Error('accessKey required!');
-    if (!secretAccessKey) throw new Error('secretKey required!');
-
-    const endpoint = this.endpoints[action];
-    const controlEndpointPath = endpoint.path(props.path);
-    const { method } = endpoint;
-
-    const data = {
-      ...(endpoint.defaultData || {}),
-      ...props.data,
-    };
-    const dataEmpty = Object.entries(data).length === 0;
-
-    const params = {
-      ...(endpoint.defaultParams || {}),
-      ...props.params,
-    };
-    const paramsEmpty = Object.entries(params).length === 0;
-
-    return axios({
-      method,
-      url: `${this.controlUrl}${controlEndpointPath}`,
-      ...(dataEmpty ? {} : { data }),
-      ...(paramsEmpty ? {} : { params }),
-      headers: aws4.sign({
-        service: 'qldb',
-        region: this.props.region,
-        path: `${controlEndpointPath}${paramsEmpty ? '' : qs.stringify(params, { addQueryPrefix: true })}`,
-        method,
-        ...(dataEmpty ? {} : { body: JSON.stringify(data) }),
-      }, { accessKeyId, secretAccessKey }).headers,
+    this.control = new ControlDriver({
+      ...this.props,
+      accessKeyId: this.props.accessKey,
+      secretAccessKey: this.props.secretKey,
     });
+
+    // this.session = new SessionDriver({
+    //   ...this.props,
+    //   accessKeyId: this.props.accessKey,
+    //   secretAccessKey: this.props.secretKey,
+    // });
   }
 
+  // TABLE CRUD
+  // https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/QLDB.html#createLedger-property
   create(props) {
-    return this.control('create', {
-      data: pick(props, [
-        'DeletionProtection',
-        'Name',
-        'PermissionsMode',
-        'Tags',
-      ]),
-    });
+    return this.control.createLedger(props).promise();
   }
 
+  // https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/QLDB.html#deleteLedger-property
   delete(props) {
-    return this.control('delete', {
-      path: pick(props, [
-        'Name',
-      ]),
-    });
+    return this.control.deleteLedger(props).promise();
   }
 
+  // https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/QLDB.html#listLedgers-property
   list(props) {
-    return this.control('list', {
-      params: pick(props, [
-        'MaxResults',
-        'NextToken',
-      ]),
-    });
+    return this.control.listLedgers(props).promise();
   }
 
+  // https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/QLDB.html#describeLedger-property
   describe(props) {
-    return this.control('describe', {
-      path: pick(props, [
-        'Name',
-      ]),
-    });
+    return this.control.describeLedger({
+      Name: this.props.ledger,
+      ...props,
+    }).promise();
   }
 
+  // https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/QLDB.html#updateLedger-property
   update(props) {
-    return this.control('update', {
-      data: pick(props, [
-        'DeletionProtection',
-      ]),
-      path: pick(props, [
-        'Name',
-      ]),
-    });
+    return this.control.describeLedger(props).promise();
   }
 
+  // BLOCKCHAIN
+  // https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/QLDB.html#getBlock-property
   block(props) {
-    return this.control('getBlock', {
-      data: pick(props, [
-        'BlockAddress',
-        'DigestTipAddress',
-      ]),
-      path: pick(props, [
-        'Name',
-      ]),
-    });
+    return this.control.getBlock(props).promise();
   }
 
+  // https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/QLDB.html#getDigest-property
   digest(props) {
-    return this.control('getDigest', {
-      data: pick(props, [
-        'DigestTipAddress',
-      ]),
-      path: pick(props, [
-        'Name',
-      ]),
-    });
+    return this.control.getDigest(props).promise();
   }
 
+  // https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/QLDB.html#getRevision-property
   revision(props) {
-    return this.control('getRevision', {
-      data: pick(props, [
-        'BlockAddress',
-        'DigestTipAddress',
-        'DocumentId',
-      ]),
-      path: pick(props, [
-        'Name',
-      ]),
-    });
+    return this.control.getRevision(props).promise();
   }
+
+  // JOURNALS
+  // https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/QLDB.html#describeJournalS3Export-property
+  journal(props) {
+    return this.control.describeJournalS3Export(props).promise();
+  }
+
+  // https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/QLDB.html#exportJournalToS3-property
+  exportJournal(props) {
+    return this.control.exportJournalToS3(props).promise();
+  }
+
+  // https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/QLDB.html#listJournalS3Exports-property
+  // https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/QLDB.html#listJournalS3ExportsForLedger-property
+  listJournals(props = {}) {
+    if (!props.Name) return this.control.listJournalS3Exports(props).promise();
+    return this.control.listJournalS3ExportsForLedger(props).promise();
+  }
+
+  // TODO: TAGS
 
   validate(query) {
     return new Promise((resolve, reject) => {
@@ -273,6 +170,3 @@ class QLDB {
     });
   }
 }
-
-export { ionize };
-export default QLDB;
