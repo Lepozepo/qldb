@@ -8,11 +8,13 @@ const QuantumClient = new QLDB({
 });
 
 describe('QLDB', () => {
-//   it('can execute', async () => {
-//     const result = await QuantumClient.execute(process.env.TEST_QUERY);
-//     expect(result).toBeInstanceOf(Array);
-//   });
-// 
+  it('can execute', async () => {
+    const result = await QuantumClient.execute(process.env.TEST_QUERY);
+
+    console.log(result);
+    expect(result).toBeInstanceOf(Array);
+  });
+
 //   it('can fail', async () => {
 //     let failure;
 //     try {

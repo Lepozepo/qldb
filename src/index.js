@@ -2,18 +2,18 @@ import {
   isDate,
   isPlainObject,
   isArray,
-  pick,
 } from 'lodash';
 import java from 'java';
-import parse from 'loose-json';
+// import parse from 'loose-json';
 import path from 'path';
-import axios from 'axios';
-import aws4 from 'aws4';
-import qs from 'qs';
-import { QLDB as ControlDriver, QLDBSession as SessionDriver } from 'aws-sdk';
+// import axios from 'axios';
+// import aws4 from 'aws4';
+// import qs from 'qs';
+import { QLDB as ControlDriver } from 'aws-sdk';
+import { PooledQldbDriver as SessionDriver } from 'amazon-qldb-driver-nodejs';
+import { decodeUtf8, makeTextWriter } from 'ion-js';
 
 java.classpath.push(path.resolve(__dirname, '../assets/execute.jar'));
-const Execute = java.import('software.amazon.qldb.tutorial.Execute');
 const Validate = java.import('software.amazon.qldb.tutorial.Validate');
 
 export function ionize(entity) {
@@ -43,20 +43,21 @@ export default class QLDB {
   constructor(props = {}) {
     this.props = {
       region: 'us-east-2',
+      controlProps: {},
+      sessionProps: {},
       ...props,
     };
 
     this.control = new ControlDriver({
-      ...this.props,
       accessKeyId: this.props.accessKey,
       secretAccessKey: this.props.secretKey,
+      region: this.props.region,
+      ...this.props.controlProps,
     });
 
-    // this.session = new SessionDriver({
-    //   ...this.props,
-    //   accessKeyId: this.props.accessKey,
-    //   secretAccessKey: this.props.secretKey,
-    // });
+    if (this.props.ledger) {
+      this.connect(this.props.ledger);
+    }
   }
 
   // TABLE CRUD
@@ -77,10 +78,7 @@ export default class QLDB {
 
   // https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/QLDB.html#describeLedger-property
   describe(props) {
-    return this.control.describeLedger({
-      Name: this.props.ledger,
-      ...props,
-    }).promise();
+    return this.control.describeLedger(props).promise();
   }
 
   // https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/QLDB.html#updateLedger-property
@@ -124,6 +122,44 @@ export default class QLDB {
 
   // TODO: TAGS
 
+  // EXECUTION
+  connect(ledger, sessionProps) {
+    if (this.sessionDriver) {
+      this.sessionDriver.close();
+    }
+
+    this.sessionDriver = new SessionDriver(ledger, {
+      accessKeyId: this.props.accessKey,
+      secretAccessKey: this.props.secretKey,
+      region: this.props.region,
+      ...(sessionProps || this.props.sessionProps),
+    });
+  }
+
+  async session() {
+    if (!this.sessionDriver) throw new Error('The driver is not connected to a ledger! Use .connect(ledgerName) before running queries');
+
+    if (this._session) return this._session;
+
+    this._session = await this.sessionDriver.getSession();
+    return this._session;
+  }
+
+  async execute(query) {
+    const session = await this.session();
+    const binaryResult = await session.executeStatement(query);
+    return this.parse(binaryResult);
+  }
+
+  // eslint-disable-next-line
+  parse(binaryResult) {
+    const writer = makeTextWriter();
+    binaryResult.getResultList().forEach((reader) => {
+      writer.writeValues(reader);
+    });
+    return decodeUtf8(writer.getBytes());
+  }
+
   validate(query) {
     return new Promise((resolve, reject) => {
       try {
@@ -138,31 +174,6 @@ export default class QLDB {
         if (!ledger) throw new Error('ledger required!');
 
         const result = Validate.validateSync(accessKey, secretKey, region, ledger, query);
-        return resolve(result);
-      } catch (err) {
-        return reject(new Error((err.cause && err.cause.getMessageSync()) || err));
-      }
-    });
-  }
-
-  execute(query) {
-    return new Promise((resolve, reject) => {
-      try {
-        const {
-          accessKey,
-          secretKey,
-          region,
-          ledger,
-        } = this.props;
-        if (!accessKey) throw new Error('accessKey required!');
-        if (!secretKey) throw new Error('secretKey required!');
-        if (!ledger) throw new Error('ledger required!');
-
-        const resultBuffer = Execute.executeSync(accessKey, secretKey, region, ledger, query);
-        if (!resultBuffer) return resolve();
-        const resultString = resultBuffer.toStringSync();
-        const result = parse(resultString);
-
         return resolve(result);
       } catch (err) {
         return reject(new Error((err.cause && err.cause.getMessageSync()) || err));
