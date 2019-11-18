@@ -11,7 +11,7 @@ import path from 'path';
 // import qs from 'qs';
 import { QLDB as ControlDriver } from 'aws-sdk';
 import { PooledQldbDriver as SessionDriver } from 'amazon-qldb-driver-nodejs';
-import { decodeUtf8, makeTextWriter } from 'ion-js';
+import { IonTypes } from 'ion-js';
 
 java.classpath.push(path.resolve(__dirname, '../assets/execute.jar'));
 const Validate = java.import('software.amazon.qldb.tutorial.Validate');
@@ -145,19 +145,63 @@ export default class QLDB {
     return this._session;
   }
 
-  async execute(query) {
+  async execute(query, ops = {}) {
+    const { noParse = false } = ops;
+
     const session = await this.session();
     const binaryResult = await session.executeStatement(query);
-    return this.parse(binaryResult);
+
+    if (noParse) return binaryResult;
+
+    return this.parse(binaryResult.getResultList());
   }
 
-  // eslint-disable-next-line
-  parse(binaryResult) {
-    const writer = makeTextWriter();
-    binaryResult.getResultList().forEach((reader) => {
-      writer.writeValues(reader);
-    });
-    return decodeUtf8(writer.getBytes());
+  parse(ions) {
+    return ions.map(this.parseIon);
+  }
+
+  parseIon = (ion) => {
+    if (ion.type() === null) {
+      ion.next();
+    }
+
+    if (ion.type() === IonTypes.LIST) {
+      const list = [];
+      ion.stepIn();
+      while (ion.next() != null) {
+        const itemInList = this.parseIon(ion);
+        list.push(itemInList);
+      }
+
+      return list;
+    }
+
+    if (ion.type() === IonTypes.STRUCT) {
+      const structToReturn = {};
+
+      let type;
+      const currentDepth = ion.depth();
+      ion.stepIn();
+      while (ion.depth() > currentDepth) {
+        type = ion.next();
+        if (type === null) {
+          ion.stepOut();
+        } else {
+          structToReturn[ion.fieldName()] = this.parseIon(ion);
+        }
+      }
+      return structToReturn;
+    }
+
+    if (ion.type() === IonTypes.DECIMAL) {
+      return ion.value().numberValue();
+    }
+
+    if (ion.type() === IonTypes.TIMESTAMP) {
+      return ion.value().toString();
+    }
+
+    return ion.value();
   }
 
   validate(query) {

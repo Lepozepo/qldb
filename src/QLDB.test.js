@@ -10,21 +10,19 @@ const QuantumClient = new QLDB({
 describe('QLDB', () => {
   it('can execute', async () => {
     const result = await QuantumClient.execute(process.env.TEST_QUERY);
-
-    console.log(result);
     expect(result).toBeInstanceOf(Array);
   });
 
-//   it('can fail', async () => {
-//     let failure;
-//     try {
-//       await QuantumClient.execute('SELECT * FROM nothing');
-//     } catch (err) {
-//       failure = err;
-//     }
-//     expect(failure).toBeInstanceOf(Error);
-//     expect(failure.message.includes('No such variable')).toBe(true);
-//   });
+  it('can fail', async () => {
+    let failure;
+    try {
+      await QuantumClient.execute('SELECT * FROM nothing');
+    } catch (err) {
+      failure = err;
+    }
+    expect(failure).toBeInstanceOf(Error);
+    expect(failure.message.includes('No such variable')).toBe(true);
+  });
 
   it('can list ledgers', async () => {
     try {
