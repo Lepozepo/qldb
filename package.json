@@ -3,16 +3,15 @@
   "version": "2.2.0",
   "license": "MIT",
   "repository": {
-    "type" : "git",
-    "url" : "https://github.com/lepozepo/qldb"
+    "type": "git",
+    "url": "https://github.com/lepozepo/qldb"
   },
   "dependencies": {
-    "aws4": "^1.8.0",
-    "axios": "^0.19.0",
-    "java": "^0.11.0",
-    "lodash": "^4.17.15",
-    "loose-json": "^1.1.2",
-    "qs": "^6.7.0"
+    "amazon-qldb-driver-nodejs": "^0.1.0-preview.2",
+    "aws-sdk": "^2.572.0",
+    "crypto": "^1.0.1",
+    "ion-js": "^3.1.2",
+    "lodash": "^4.17.15"
   },
   "scripts": {
     "pack:build": "pack build",
@@ -34,27 +33,20 @@
       ],
       [
         "@pika/plugin-build-node"
-      ],
-      [
-        "@pika/plugin-copy-assets",
-        {
-          "files": [
-            "assets"
-          ]
-        }
       ]
     ]
   },
   "devDependencies": {
+    "@babel/cli": "^7.7.0",
     "@babel/core": "^7.4.3",
+    "@babel/node": "^7.7.0",
     "@babel/plugin-proposal-class-properties": "^7.4.0",
     "@babel/preset-env": "^7.5.4",
-    "@pika/pack": "0.4.0",
-    "@pika/plugin-build-node": "0.4.0",
-    "@pika/plugin-copy-assets": "0.4.0",
-    "@pika/plugin-standard-pkg": "0.4.0",
+    "@pika/pack": "^0.5.0",
+    "@pika/plugin-build-node": "^0.7.1",
+    "@pika/plugin-standard-pkg": "^0.7.1",
     "babel-eslint": "^10.0.1",
-    "babel-jest": "^24.8.0",
+    "babel-jest": "^24.9.0",
     "dotenv": "^8.0.0",
     "eslint": "5.16.0",
     "eslint-config-airbnb": "17.1.0",
@@ -62,6 +54,6 @@
     "eslint-plugin-jest": "^22.6.4",
     "eslint-plugin-jsx-a11y": "^6.1.1",
     "eslint-plugin-react": "^7.11.0",
-    "jest": "^24.8.0"
+    "jest": "^24.9.0"
   }
 }

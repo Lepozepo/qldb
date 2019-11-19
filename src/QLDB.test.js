@@ -27,7 +27,7 @@ describe('QLDB', () => {
   it('can list ledgers', async () => {
     try {
       const result = await QuantumClient.list();
-      expect(result.data.Ledgers).toBeInstanceOf(Array);
+      expect(result.Ledgers).toBeInstanceOf(Array);
     } catch (err) {
       // console.log(err);
       throw err;
@@ -35,6 +35,7 @@ describe('QLDB', () => {
   });
 
   it('can validate ledger entries', async () => {
+    jest.setTimeout(15000);
     try {
       const validationResult = await QuantumClient.validate(process.env.TEST_VALIDATION_QUERY);
       expect(validationResult).toBe(true);
