@@ -9,12 +9,6 @@ jobs:
     steps:
     - uses: actions/checkout@v1
 
-    - name: Use Java
-      uses: actions/setup-java@v1
-      with:
-        java-version: '11.0.x'
-        architecture: x64
-
     - name: Use Node 10
       uses: actions/setup-node@v1
       with:
@@ -24,7 +18,7 @@ jobs:
       run: yarn
 
     - name: test
-      run: yarn test:lint
+      run: yarn test
       env:
         CI: true
         ACCESS_KEY: ${{ secrets.ACCESS_KEY }}
