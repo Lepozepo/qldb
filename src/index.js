@@ -232,16 +232,29 @@ export default class QLDB {
   }
 
   async execute(query, ops = {}) {
-    const { noParse = false } = ops;
+    const { noParse = false, txn } = ops;
 
-    const session = await this.session();
-    const binaryResult = await session.executeStatement(query);
+    let binaryResult;
+    if (txn) {
+      binaryResult = await txn.executeInline(query);
+    } else {
+      const session = await this.session();
+      binaryResult = await session.executeStatement(query);
+    }
 
     const resultList = binaryResult.getResultList();
 
     if (noParse) return resultList;
 
     return this.parse(resultList);
+  }
+
+  async transaction(fn = () => {}) {
+    const session = await this.session();
+    return session.executeLambda(txn => fn({
+      txn,
+      execute: (query, ops) => this.execute(query, { ...ops, txn }),
+    }));
   }
 
   parse(ions) {
