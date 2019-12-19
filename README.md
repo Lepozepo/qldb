@@ -1,4 +1,4 @@
-# QLDB Java Bridge for Node
+# QLDB Bridge for Node
 This is a simplified solution of the QLDB driver for AWS
 
 ## How to use
