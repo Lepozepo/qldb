@@ -1,4 +1,4 @@
-import QLDB from './index';
+import QLDB, { ionize } from './index';
 
 const QuantumClient = new QLDB({
   region: process.env.REGION,
@@ -11,6 +11,23 @@ describe('QLDB', () => {
   it('can execute', async () => {
     const result = await QuantumClient.execute(process.env.TEST_QUERY);
     expect(result).toBeInstanceOf(Array);
+  });
+
+  it('can run an acid transaction', async () => {
+    const [tableId, documentId] = await QuantumClient.transaction(async (txn) => {
+      const tb = await txn.execute('CREATE TABLE tester');
+      expect(tb?.[0]?.tableId).toBeDefined();
+
+      const thing = await txn.execute(`INSERT INTO tester ${ionize({ id: 1, name: 'thing1' })}`);
+      expect(thing?.[0]?.documentId).toBeDefined();
+
+      return [tb?.[0]?.tableId, thing?.[0]?.documentId];
+    });
+
+    expect(tableId).toBeDefined();
+    expect(documentId).toBeDefined();
+
+    await QuantumClient.execute('DROP TABLE tester');
   });
 
   it('can fail', async () => {
