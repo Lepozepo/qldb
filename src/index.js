@@ -225,10 +225,7 @@ export default class QLDB {
   async session() {
     if (!this.sessionDriver) throw new Error('The driver is not connected to a ledger! Use .connect(ledgerName) before running queries');
 
-    if (this._session) return this._session;
-
-    this._session = await this.sessionDriver.getSession();
-    return this._session;
+    return this.sessionDriver.getSession();
   }
 
   async execute(query, ops = {}) {
